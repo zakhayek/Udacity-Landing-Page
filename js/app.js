@@ -7,20 +7,31 @@ const button = document.querySelectorAll("button");
 navElements.forEach(element => {
   const navlistElement = `<li class='menu__link landing__container' data-link=${element.id}><a href='#${element.id}'>${element.dataset.nav}</li>`;
   navList.insertAdjacentHTML('beforeend', navlistElement);
+  window.addEventListener('scroll', function(event){
+    isElementInViewport(element)
+    ? navlistElement.classList.add('active')
+    : navlistElement.classList.remove('active');
+  })
 })
 
 // Function called by from beneath. Added buffer to rect.top to prevent "flashing" feel. Intentionally does not have to be dead on in order to retain .active.
 function isElementInViewport(el) {
   var rect = el.getBoundingClientRect();
-  return (rect.top >= -600 && rect.bottom <= (window.innerHeight));
+  return (rect.top >= -500 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight));
 }
 
 // Checks to see whether the element is in the viewport, then applies or removes the .active class as necessary. Also works on the "Return to Top" button.
 navElements.forEach(element => {
+  const navListElement = document.querySelector(`.menu__link[data-link='${element.id}']`);
   window.addEventListener('scroll', function(event) {
-    isElementInViewport(element)
-      ? element.classList.add('active')
-      : element.classList.remove('active');
+    if (isElementInViewport(element)){
+      element.classList.add('active');
+      navListElement.classList.add('active');
+    }
+    else {
+      element.classList.remove('active');
+      navListElement.classList.remove('active');
+    }
   })
 })
 
